@@ -1,7 +1,7 @@
 # Hello Python
 import os
 import sys
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, GridSearchCV
 import numpy as np      
 import pandas as pd
 import dill
@@ -19,12 +19,16 @@ def save_object(file_path, obj):
     except Exception as e:
         raise CustomException(e, sys)
 
-def evaluate_models(X_train, y_train, X_test, y_test, models):
+def evaluate_models(X_train, y_train, X_test, y_test, models, param):
     try:
         report = {}
         
         for i in range(len(list(models))):
             model = list(models.values())[i]  # Corrected typo
+            para=param[list(models.keys())[i]]
+            
+            gs = GridSearchCV(model,para,cv=3)
+            # gs.fit(X_train,y_train)
             model.fit(X_train, y_train)
             y_train_pred = model.predict(X_train)
             y_test_pred = model.predict(X_test)
